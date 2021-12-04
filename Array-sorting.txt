@@ -1,0 +1,15 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+msg1  DW  'Enter size of array :$'
+.CODE
+
+MAIN PROC
+
+
+
+
+
+
+
+END MAIN
