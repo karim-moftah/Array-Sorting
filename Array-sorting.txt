@@ -5,7 +5,11 @@ msg1  DW  'Enter size of array :$'
 .CODE
 
 MAIN PROC
-
+MOV AX, @DATA                ; initialize data segment ds
+MOV DS, AX
+LEA DX, PROMPT_1             ; load and display the string PROMPT_1,  user interface(UI) , to take the first array size from user.
+MOV AH, 9                    ; AH value for dos interrupt output a message
+INT 21H                      ; interrupt dos that takes input from user
 
 
 
