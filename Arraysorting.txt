@@ -2,12 +2,36 @@
 .STACK 100H
 .DATA
 msg1  DW  'Enter size of array :$'
+ARRAY DW 255 DUP(?)    
 .CODE
 
 MAIN PROC
 
+	MOV AX, @DATA                	; initialize DS
+     	MOV DS, AX
+     	LEA DX, msg1             	; load address of msg1 in DX
+     	MOV AH, 9                    	; AH value for dos interrupt to print msg1
+     	INT 21H                      	; interrupt dos that takes input from user
+    
+     	LEA SI, ARRAY              	; load adderss of ARRAY in SI
 
 
+
+
+
+
+Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
+        
+    
+   PUSH BX                        ; push BX in the STACK
+   PUSH CX                        ; push CX in the STACK
+   PUSH DX                        ; push DX in the STACK
+   
+   POP DX                         ; pop from STACK to DX
+   POP CX                         ; pop from STACK to CX
+   POP BX                         ; pop from STACK to BX
+   RET                            ; return to CALL 
+   Get_Size ENDP   
 
 
 
