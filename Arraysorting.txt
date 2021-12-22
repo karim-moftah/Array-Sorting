@@ -14,7 +14,7 @@ MAIN PROC
      	INT 21H                      	; interrupt dos that takes input from user
     
      	LEA SI, ARRAY              	; load adderss of ARRAY in SI
-
+	CALL Get_Size			; get size and put it in AX
 
 
 
@@ -27,6 +27,20 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    PUSH CX                        ; push CX in the STACK
    PUSH DX                        ; push DX in the STACK
    
+
+   XOR BX, BX                     ; clear BX
+   XOR CX, CX                     ; clear CX
+   XOR DX, DX                     ; clear DX
+   MOV AH, 1                      ; input function
+   INT 21H                        ; read input
+   AND AX, 000FH                  ; ascii 2 decimal 
+
+   MOV BX, AX                     ; set BX=AX+BX
+   MOV AH, 1                      ; set input function
+   INT 21H                        ; read input
+   CMP AL, 0DH                    ; compare AL with enter
+   
+   MOV AX, BX                     ; AX=BX
    POP DX                         ; pop from STACK to DX
    POP CX                         ; pop from STACK to CX
    POP BX                         ; pop from STACK to BX
