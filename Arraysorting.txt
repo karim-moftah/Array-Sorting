@@ -72,4 +72,30 @@ GET_ARRAY PROC ; to get array elements size in BX , address of ARRAY[0] in SI
 
 
 
+
+
+
+
+
+DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0] in SI , size in BX 
+  
+   
+   PUSH AX                        ; push AX in the STACK   
+   PUSH CX                        ; push CX in the STACK
+   PUSH DX                        ; push DX in the STACK
+   
+
+   POP DX                         ; pop  from STACK into DX
+   POP CX                         ; pop  from STACK into CX
+   POP AX                         ; pop  from STACK into AX
+
+   RET                            ; return control to the calling procedure
+ DISPLAY_ARRAY ENDP
+
+
+
+
+
+
+
 END MAIN
