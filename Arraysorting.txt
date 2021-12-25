@@ -75,6 +75,33 @@ GET_ARRAY PROC ; to get array elements size in BX , address of ARRAY[0] in SI
 
 
 
+ ASCI_2_DECIMAL PROC
+  
+ 
+
+   PUSH BX                        ; push BX in the STACK
+   PUSH CX                        ; push CX in the STACK
+   PUSH DX                        ; push DX in the STACK
+   
+
+
+                   
+   POP DX                         ; pop  from STACK into DX
+   POP CX                         ; pop  from STACK into CX
+   POP BX                         ; pop  from STACK into BX
+   
+RET   
+                                  ; return control to the calling procedure
+ 
+ASCI_2_DECIMAL ENDP
+
+
+
+
+
+
+
+
 
 
 DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0] in SI , size in BX 
@@ -91,6 +118,18 @@ DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0
 
    RET                            ; return control to the calling procedure
  DISPLAY_ARRAY ENDP
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
