@@ -83,8 +83,34 @@ GET_ARRAY PROC ; to get array elements size in BX , address of ARRAY[0] in SI
    PUSH CX                        ; push CX in the STACK
    PUSH DX                        ; push DX in the STACK
    
+  
+JMP Label_READ                    ; jump to label Label_READ 
+ Label_SKIP_BACKSPACE:            ; label
+   MOV AH, 2                      ; output function
+   MOV DL, 20H                    ; put DL=' '
+   INT 21H                        ; print 
 
+ Label_READ:                      ; jump label
+   XOR BX, BX                     ; BX = 0
+   XOR CX, CX                     ; CX = 0
+   XOR DX, DX                     ; DX = 0
+   MOV AH, 1                      ; input function
+   INT 21H                        ; read a character
+   CMP AL, "-"                    ; compare AL with "-"
+   JE Label_MINUS                 ; jump to Label_MINUS if AL="-"
 
+   CMP AL, "+"                    ; compare AL with "+"
+   JE Label_PLUS                  ; jump to Label_PLUS if AL="+"
+   JMP Label_SKIP_INPUT           ; jump to Label_SKIP_INPUT
+   Label_MINUS:                   ; jump label
+   MOV CH, 1                      ; set CH=1
+   INC CL                         ; CL = CL + 1
+   JMP Label_INPUT                ; jump to Label_INPUT
+ 
+ Label_PLUS:                      ; jump label
+   MOV CH, 2                      ; put CH=2
+   INC CL                         ; CL=CL+1
+  
                    
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
@@ -110,7 +136,34 @@ DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0
    PUSH AX                        ; push AX in the STACK   
    PUSH CX                        ; push CX in the STACK
    PUSH DX                        ; push DX in the STACK
-   
+
+   JMP Label_READ                    ; jump to label Label_READ 
+ Label_SKIP_BACKSPACE:            ; label
+   MOV AH, 2                      ; output function
+   MOV DL, 20H                    ; put DL=' '
+   INT 21H                        ; print 
+
+ Label_READ:                      ; jump label
+   XOR BX, BX                     ; BX = 0
+   XOR CX, CX                     ; CX = 0
+   XOR DX, DX                     ; DX = 0
+   MOV AH, 1                      ; input function
+   INT 21H                        ; read a character
+   CMP AL, "-"                    ; compare AL with "-"
+   JE Label_MINUS                 ; jump to Label_MINUS if AL="-"
+
+   CMP AL, "+"                    ; compare AL with "+"
+   JE Label_PLUS                  ; jump to Label_PLUS if AL="+"
+   JMP Label_SKIP_INPUT           ; jump to Label_SKIP_INPUT
+   Label_MINUS:                   ; jump label
+   MOV CH, 1                      ; set CH=1
+   INC CL                         ; CL = CL + 1
+   JMP Label_INPUT                ; jump to Label_INPUT
+ 
+ Label_PLUS:                      ; jump label
+   MOV CH, 2                      ; put CH=2
+   INC CL                         ; CL=CL+1
+  
 
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
