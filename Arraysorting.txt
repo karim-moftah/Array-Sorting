@@ -20,10 +20,41 @@ MAIN PROC
 
 
 
+validation_check PROC 
+    push bx                       ; push BX inthe STACK
+   
+    lable_READ0:
+ 
+     XOR CX,CX                    ; put CX register equals to zero, CX==0
+     XOR BX,BX                    ; put BX register equals to zero, BX==0
+     XOR AX,AX                    ; put AX register equals to zero, AX==0
+     
+     Mov AH,1                     ; read a character
+     INT 21h                      ; interrupt dos that takes input from user
+     
+     cmp    al, '-'               ; compare input with -
+     JE lable_NEGATIVE                 ; JUMP to NEGATIVE lable if the input equals(-)
+     
+     cmp al,'+'                   ;compare input with +
+     jE lable_POSITIVE                 ; JUMP to POSITIVE lable if the input equals(+)       
+     jmp lable_input0                  ; JUMP to input0 lable        
+              
+    lable_NEGATIVE:                    ; NEGATIVE lable
+     INC CL                       ; CL=CL+1
+     JMP lable_ERROR0                  ; JUMP to ERROR0 lable
+   
+    lable_POSITIVE:                    ; POSITIVE lable
+     INC CL                       ; CL=CL+1
+     JMP lable_ERROR0                  ; JUMP to ERROR0 lable 
+                 
+
+
+
+
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
     
-   PUSH BX                        ; push BX in the STACK
+   PUSH BX                        ; push BX in the STACK0
    PUSH CX                        ; push CX in the STACK
    PUSH DX                        ; push DX in the STACK
    
