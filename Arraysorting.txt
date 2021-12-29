@@ -141,7 +141,12 @@ JMP Label_READ                    ; jump to label Label_READ
  Label_PLUS:                      ; jump label
    MOV CH, 2                      ; put CH=2
    INC CL                         ; CL=CL+1
-  
+   
+Label_INPUT:                      ; jump label
+   MOV AH, 1                      ; input function
+   INT 21H                        ; read a character
+   MOV AH, 1                      ; set input function
+   INT 21H                        ; read a character
                    
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
