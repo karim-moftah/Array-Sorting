@@ -46,8 +46,29 @@ validation_check PROC
     lable_POSITIVE:                    ; POSITIVE lable
      INC CL                       ; CL=CL+1
      JMP lable_ERROR0                  ; JUMP to ERROR0 lable 
-                 
+     
+            
+      lable_INPUT0:                      ; INPUT0 lable
+     MOV BL,AL                    ; BL=AL
+     MOV AH, 1                    ; read a character
+     INT 21H                      ; interrupt dos that takes input from user
 
+    lable_SKIP_INPUT0:                 ; SKIP_INPUT0 label
+     CMP AL, 0DH                  ; compare AL with Return (enter)
+     JE lable_END_INPUT0               ; jump to label lable_END_INPUT if the input equals (enter)  
+
+     CMP AL, 8H                   ; compare AL with 8H   (backspace)
+     JNE lable_NOT_BACKSPACE0          ; jump to label lable_NOT_BACKSPACE if AL!=8
+ 
+    lable_MOVE_BACK0:                  ; MOVE_BACK0 label
+     MOV AH, 2                    ; put output function
+     MOV DL, 20H                  ; put DL=' '
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; put DL=8H
+     INT 21H                      ; print a character
+     XOR DX, DX                   ; clear DX
+     DEC CL                       ; put CL=CL-1
+     JMP lable_INPUT0                  ; jump to label lable_INPUT0     
 
 
 
