@@ -179,7 +179,23 @@ RET
 ASCI_2_DECIMAL ENDP
 
 
+DECIMAL_2_ASCII PROC
 
+   PUSH BX                        ; push BX into the STACK
+   PUSH CX                        ; push CX into the STACK
+   PUSH DX                        ; push DX into the STACK
+
+
+
+
+
+
+   POP DX                         ; pop a value from STACK into DX
+   POP CX                         ; pop a value from STACK into CX
+   POP BX                         ; pop a value from STACK into BX
+
+   RET                            ; return control to the calling procedure
+ DECIMAL_2_ASCII ENDP
 
 
 
