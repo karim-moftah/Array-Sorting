@@ -87,6 +87,43 @@ validation_check PROC
      JS lable_ERROR0                   ; jump to label lable_ERROR if SF=1
      JMP lable_INPUT0                  ; jump to label lable_INPUT0       
 
+
+
+
+
+
+
+QUICK_SORT: 
+        mov  ax, p
+        cmp  ax, r                  ;COMPARE P WITH R
+        jge  @bigger1                ;IF P = R, SORT IS DONE.
+    
+        ;CALL PARTITION(A, P, R).
+        call partition
+    
+        ;GET Q = PARTITION(A, P, R).
+        mov  q, ax
+    
+        ;PUSH Q+1, R INTO STACK FOR LATER USAGE.
+        inc  ax
+        push ax
+        push r
+    
+        ;CALL QUICKSORT(A, P, Q-1).
+        mov  ax, q
+        mov  r, ax
+        dec  r
+        call QUICK_SORT
+    
+        ;CALL QUICKSORT(A, Q+1, R).
+        pop  r
+        pop  p 
+        call QUICK_SORT 
+    
+        ;WHEN SORT IS DONE.
+        @bigger1:
+          RET 
+            
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
     
