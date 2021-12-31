@@ -200,6 +200,8 @@ DECIMAL_2_ASCII PROC
    PUSH CX                        ; push CX into the STACK
    PUSH DX                        ; push DX into the STACK
 
+   CMP AX, 0                      ; compare AX with 0
+   JGE LABEL_START                     ; jump to label @START if AX>=0
 
 
 
