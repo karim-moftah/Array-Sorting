@@ -70,7 +70,22 @@ validation_check PROC
      DEC CL                       ; put CL=CL-1
      JMP lable_INPUT0                  ; jump to label lable_INPUT0     
 
+    lable_NOT_BACKSPACE0:              ; NOT_BACKSPACE0 label
+     INC CL                       ; put CL=CL+1
+     CMP AL, 30H                  ; compare AL with 0
+     JL lable_ERROR0                   ; jump to label lable_ERROR0if AL<0
+     CMP AL, 39H                  ; compare AL with 9
+     JG lable_ERROR0                   ; jump to label lable_ERROR0if AL>9
+     AND AX, 000FH                ; convert ascii to decimal code  
 
+     PUSH AX                      ; push AX inthe STACK
+     MOV AX, 10                   ; put AX=10
+     MUL BX                       ; put AX=AX*BX
+     MOV BX, AX                   ; put BX=AX
+     POP AX                       ; pop a value from STACK into AX
+     ADD BX, AX                   ; put BX=AX+BX
+     JS lable_ERROR0                   ; jump to label lable_ERROR if SF=1
+     JMP lable_INPUT0                  ; jump to label lable_INPUT0       
 
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
