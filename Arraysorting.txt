@@ -87,8 +87,24 @@ validation_check PROC
      POP AX                       ; pop a value from STACK into AX
      ADD BX, AX                   ; put BX=AX+BX
      JS lable_ERROR0                   ; jump to label lable_ERROR if SF=1
-     JMP lable_INPUT0                  ; jump to label lable_INPUT0       
-
+     JMP lable_INPUT0                  ; jump to label lable_INPUT0    
+                       
+    lable_ERROR0:                      ; ERROR0 label
+     MOV AH, 2                    ; put output function
+     MOV DL, 7H                   ; put DL=7H  (beep sound)
+     INT 21H                      ; print a character
+     
+    lable_CLEAR0:                      ; CLEAR0 label  
+     MOV DL, 8H                   ; put DL=8H (backspace in ascii)
+     INT 21H                      ; print a character
+     MOV DL, 20H                  ; put DL=' '(Space in ascii)
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; put DL=8H (backspace in ascii)
+     INT 21H                      ; print a character 
+    LOOP lable_CLEAR0                  ; jump to label lable_CLEAR0 if CX!=0
+    JMP lable_READ0                    ; jump to label lable_READ0
+       
+   lable_END_INPUT0:                   ; END_INPUT0 label  
 
 
 
