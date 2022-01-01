@@ -2,6 +2,8 @@
 .STACK 100H
 .DATA
 msg1  DW  'Enter size of array :$'
+msg2  DW  ,0AH,0DH,'Array elements are :$'  
+msg3  DW  ,0AH,0DH,'size of array must be positive interger:  $'
 ARRAY DW 255 DUP(?)    
 .CODE
 
@@ -132,6 +134,13 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    PUSH DX                        ; push DX in the STACK
    
 
+   JMP Label_READ1                     ; jump to label Label_READ
+   Label_SKIP_BACKSPACE1:              ; SKIP_BACKSPACE1 label
+   MOV AH, 2                      ; output function
+   MOV DL, 20H                    ; DL=' ' space
+   INT 21H                        ; print a character
+   Label_READ1:                        ; READ1 label
+
    XOR BX, BX                     ; clear BX
    XOR CX, CX                     ; clear CX
    XOR DX, DX                     ; clear DX
@@ -142,8 +151,33 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    MOV BX, AX                     ; set BX=AX+BX
    MOV AH, 1                      ; set input function
    INT 21H                        ; read input
-   CMP AL, 0DH                    ; compare AL with enter
-   
+
+ CMP AL, "-"                    ; compare AL with "-"
+ JE Label_ERROR2                     ; jump to label Label_ERROR2 if AL="-"
+ CMP AL, "+"                    ; compare AL with "+"
+ JE Label_PLUS1                      ; jump to label Label_PLUS if AL="+"
+ JMP Label_SKIP_INPUT1               ; jump to label Label_SKIP_INPUT
+Label_PLUS1:                        ; PLUS1 label
+  MOV CH, 2                      ; set CH=2
+  INC CL                         ; set CL=CL+1
+  Label_INPUT1:                       ; jump label
+  MOV AH, 1                    ; set input function
+  INT 21H                      ; read a character
+Label_SKIP_INPUT1:                ; jump label
+
+  CMP AL, 0DH                    ; compare AL with enter
+
+ Label_ERROR1:                       ; jump label
+   MOV AH, 2                      ; output function
+   MOV DL, 7H                     ; DL=7H
+   INT 21H                        ; print a character
+   XOR CH, CH                     ; clear CH
+    Label_ERROR2:                      ; jump label
+   LEA DX, msg3
+   MOV AH, 9
+   INT 21H
+   jmp Label_READ1
+
    MOV AX, BX                     ; AX=BX
    POP DX                         ; pop from STACK to DX
    POP CX                         ; pop from STACK to CX
