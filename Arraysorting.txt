@@ -290,6 +290,12 @@ DECIMAL_2_ASCII PROC
    CMP AX, 0                      ; compare AX with 0
    JGE LABEL_START                     ; jump to label @START if AX>=0
 
+   PUSH AX                        ; push AX into the STACK
+
+   MOV AH, 2                      ; set output function
+   MOV DL, "-"                    ; set DL='-'
+   INT 21H                        ; print the character
+
 
 
 
