@@ -163,6 +163,50 @@ validation_check PROC
       INT 21H
       RET 
 
+ @CHECK_BUBBLE:                 ; CHECK_BUBBLE label
+    CMP BL,31h                    ; check if input equals to ASCII(1)
+    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
+    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
+
+   @CHECK_SELECT:                 ; CHECK_SELECT label
+    CMP BL,32h                    ; check if input equals to ASCII(2)
+    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
+    JNE @CHECK_INSERTION 
+  
+   @BUBBLE_SORT:
+    POP BX                        ; pop a value from STACK into BX
+    MOV AX, SI                    ; put AX=SI
+    MOV CX, BX                    ; put CX=BX
+    PUSH BX                       ; push BX onto the STACK  
+    CMP CX,1                      ; IF CX<=1
+    JLE  @Skip_Dec                ; JUMP TO Skip_Dec lable
+    DEC CX                        ; put CX=CX-1
+   
+   @FIRST_LOOP:                   ; loop label
+    MOV BX, CX                    ; put BX=CX
+    MOV SI, AX                    ; put SI=AX
+    MOV DI, AX                    ; put DI=AX
+    INC DI
+    INC DI                        ; put DI=DI+2
+     @SECOND_LOOP:                 ; loop label 
+       MOV DX, [SI]               ; put DL=[SI]
+       CMP DX, [DI]               ; compare DL with [DI]
+       JNG @SKIP_EXCHANGE         ; jump to label @SKIP_EXCHANGE if DL<[DI]
+       XCHG DX, [DI]              ; put DL=[DI], [DI]=DL
+       MOV [SI], DX               ; put [SI]=DL
+     @SKIP_EXCHANGE:              ; SKIP_EXCHANGE label
+      INC SI 
+      INC SI                      ; put SI=SI+2
+      INC DI
+      INC DI                      ; put DI=DI+2
+      DEC BX                      ; put BX=BX-1
+     JNZ @SECOND_LOOP              ; jump to label @SECOND_LOOP if BX!=0
+    LOOP @FIRST_LOOP              ; jump to label @FIRST_LOOP while CX!=0
+   
+    @Skip_dec:                    ; Skip_dec label
+     jmp @ENDSORT                 ; jump to label @ENDSORT 
+
+
 
 
 QUICK_SORT: 
