@@ -107,7 +107,61 @@ validation_check PROC
    lable_END_INPUT0:                   ; END_INPUT0 label  
 
 
+ @CHECK_BUBBLE:                 ; CHECK_BUBBLE label
+    CMP BL,31h                    ; check if input equals to ASCII(1)
+    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
+    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
 
+   @CHECK_SELECT:                 ; CHECK_SELECT label
+    CMP BL,32h                    ; check if input equals to ASCII(2)
+    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
+    JNE @CHECK_INSERTION
+  @CHECK_INSERTION: 
+     CMP BL,33h 
+     JE @INSERTION_SORT
+     JNE @CHECK_QUICK  
+   @CHECK_QUICK: 
+     CMP BL,34h 
+     JE @QUICK_INIT
+     JNE @PRINT
+   @QUICK_INIT:
+     POP BX
+     MOV SIZE,BX
+     PUSH BX 
+     MOV  CX,SIZE
+     DEC  CX
+     MOV  R,CX  
+     CALL QUICK_SORT
+     PUSH SIZE
+     JMP @ENDSORT
+   @PRINT:
+     CMP BL,35H
+     POP BP
+     JE  PRINT_ARRAYS
+     JNE @RPRINT
+   @RPRINT:
+     CMP BL,36H
+     JE  PRINT_ARRAY_REVERSES
+     LEA DX, PROMPT_8              ; load and display the string PROMPT_5, user interface(UI), to take a nother input from user.
+     MOV AH, 9                     ; AH value for dos interrupt output a message
+     INT 21H                       ; interrupt dos that takes input from user
+     MOV CX,1                      ; CX=1
+     Jne @ERROR0                   ; JUMP to ERROR0 if input not equals to ASCII(2)            
+   PRINT_ARRAYS:
+      LEA DX, PROMPT_12            ; load and display the string PROMPT_6 
+      MOV AH, 9                   ; AH value for dos interrupt output a message
+      INT 21H 
+      CALL PRINT_ARRAY            ; call the procedure PRINT_ARRAY
+      MOV AH, 4CH                 ; return control to DOS
+      INT 21H
+   PRINT_ARRAY_REVERSES: 
+      LEA DX, PROMPT_13            ; load and display the string PROMPT_6 
+      MOV AH, 9                   ; AH value for dos interrupt output a message
+      INT 21H 
+      CALL PRINT_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
+      MOV AH, 4CH                 ; return control to DOS
+      INT 21H
+      RET 
 
 
 
