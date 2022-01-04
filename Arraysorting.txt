@@ -305,6 +305,14 @@ DECIMAL_2_ASCII PROC
    XOR CX, CX                     ; clear CX
    MOV BX, 10                     ; set BX=10
 
+   
+   LABEL_OUTPUT:                       ; loop label
+     XOR DX, DX                   ; clear DX
+     DIV BX                       ; divide AX by BX
+     PUSH DX                      ; push DX onto the STACK
+     INC CX                       ; increment CX
+     OR AX, AX                    ; take OR of Ax with AX
+   JNE LABEL_OUTPUT                    ; jump to label @OUTPUT if ZF=0
 
 
 
