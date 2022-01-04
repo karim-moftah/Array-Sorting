@@ -107,6 +107,15 @@ validation_check PROC
    lable_END_INPUT0:                   ; END_INPUT0 label  
 
 
+ @CHECK_BUBBLE:                 ; CHECK_BUBBLE label
+    CMP BL,31h                    ; check if input equals to ASCII(1)
+    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
+    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
+
+   @CHECK_SELECT:                 ; CHECK_SELECT label
+    CMP BL,32h                    ; check if input equals to ASCII(2)
+    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
+    JNE @CHECK_INSERTION
 
 
 
