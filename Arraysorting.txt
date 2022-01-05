@@ -368,6 +368,13 @@ DECIMAL_2_ASCII PROC
      OR AX, AX                    ; take OR of Ax with AX
    JNE LABEL_OUTPUT                    ; jump to label @OUTPUT if ZF=0
 
+   MOV AH, 2                      ; set output function
+
+   PRINT:                      ; loop label
+     POP DX                       ; pop a value from STACK to DX
+     OR DL, 30H                   ; convert decimal to ascii code
+     INT 21H                      ; print a character
+   LOOP PRINT                  ; jump to label @PRINT(DISPLAY) if CX!=0
 
 
    POP DX                         ; pop a value from STACK into DX
