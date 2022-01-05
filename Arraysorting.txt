@@ -296,6 +296,17 @@ partition proc
             mov  ax, p            ;GET I = P - 1.
             mov  i,  ax
             dec  i
+                 
+            mov  ax, p            ;INITIALISE J WITH P.
+            mov  j,  ax
+
+       @for_j:                    ;LOOP J FROM P TO R-1.
+                 
+            LEA SI, ARRAY         ;GET ARR[ J ].
+            mov  ax, j
+            shl  ax, 1            ;J * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]       ;AX = ARR[ J ]
 partition endp   
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
