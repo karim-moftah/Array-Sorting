@@ -449,6 +449,16 @@ Label_SKIP_INPUT:                 ; jump label
    JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK                   
    
 
+Label_CHECK_REMOVE_MINUS:         ; jump label
+   CMP CH, 1                      ; compare CH with 1
+   JNE Label_CHECK_REMOVE_PLUS    ; jump to Label_CHECK_REMOVE_PLUS if CH!=1
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+Label_CHECK_REMOVE_PLUS:          ; jump label
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+   JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK
+
 
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
