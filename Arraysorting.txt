@@ -234,6 +234,33 @@ validation_check PROC
      DEC BX                       ; put BX=BX-1
      MOV CX, BX                   ; put CX=BX
      MOV AX, SI                   ; put AX=SI
+     
+     @FIRST_LOOP2:                ; loop label
+      MOV BX, CX                  ; put BX=CX
+      MOV SI, AX                  ; put SI=AX
+      MOV DI, AX                  ; put DI=AX
+      MOV DX, [DI]                ; put DL=[DI]
+      @SECOND_LOOP2:               ; loop label
+       INC SI                     ; put SI=SI+1
+       INC SI                     ; put SI=SI+1
+       CMP [SI], DX               ; compare [SI] with DL
+       JNG @SKIP2                 ; jump to label @SKIP if [SI]<=DL
+       MOV DI, SI                 ; put DI=SI
+       MOV DX, [DI]               ; put DL=[DI]
+       @SKIP2:                    ; SKIP2 label
+       DEC BX                     ; put BX=BX-1
+     JNZ @SECOND_LOOP2             ; jump to label @SECOND_LOOP2 if BX!=0
+     MOV DX, [SI]                 ; put DL=[SI]
+     XCHG DX, [DI]                ; put DL=[DI] , [DI]=DL
+     MOV [SI], DX                 ; put [SI]=DL
+    LOOP @FIRST_LOOP2
+     jmp @ENDSORT 
+    @INSERTION_SORT:  
+     POP AX                       ; pop a value from STACK into BX 
+     CMP AX,1                    ; compare BX with 1
+     PUSH AX                      ; push BX onto the STACK                                               
+     JLE @SKIP_SORTING            ; jump to label @SKIP_SORTING if BX<=1  
+     MOV BX,1
 
 
 QUICK_SORT: 
