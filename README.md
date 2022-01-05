@@ -13,12 +13,12 @@
 ## Project Functions:
 | # | Function | 
 | ------ | ------ |
-| 1 | [x] Bubble Sort
-| 2|  [x] Selection Sort
-| 3 | [x] Insertion Sort
-| 4| [x] Quick Sort
-| 5| [x] Print Array
-|6| [x] Reverse Array
+| 1 |- [x] Bubble Sort
+| 2| - [x] Selection Sort
+| 3 | - [x] Insertion Sort
+| 4| - [x] Quick Sort
+| 5| - [x] Print Array
+|6| - [x] Reverse Array
 
 
 
