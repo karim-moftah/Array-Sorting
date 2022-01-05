@@ -271,7 +271,20 @@ QUICK_SORT:
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
       RET 
-  CONDITION ENDP   
+  CONDITION ENDP
+partition proc
+
+                                  ;GET X = ARR[ R ].
+            LEA SI, ARRAY
+            mov  ax, r
+            shl  ax, 1            ;R * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]       
+            mov  x,  ax           ;X = ARR[ R ].              
+            mov  ax, p            ;GET I = P - 1.
+            mov  i,  ax
+            dec  i
+partition endp   
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
     
