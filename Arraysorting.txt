@@ -307,6 +307,11 @@ partition proc
             shl  ax, 1            ;J * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
             add  si, ax
             mov  ax, [ si ]       ;AX = ARR[ J ]
+
+            cmp  ax, x            ;COMPARE A[ J ] WITH X.
+            jg   @bigger          ;IF A[ J ] > X, NO SWAP
+    
+            inc  i                ;GET I = I + 1.
 partition endp   
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
