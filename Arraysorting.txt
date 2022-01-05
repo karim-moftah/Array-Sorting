@@ -163,16 +163,7 @@ validation_check PROC
       INT 21H
       RET 
 
- @CHECK_BUBBLE:                 ; CHECK_BUBBLE label
-    CMP BL,31h                    ; check if input equals to ASCII(1)
-    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
-    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
-
-   @CHECK_SELECT:                 ; CHECK_SELECT label
-    CMP BL,32h                    ; check if input equals to ASCII(2)
-    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
-    JNE @CHECK_INSERTION 
-  
+ 
    @BUBBLE_SORT:
     POP BX                        ; pop a value from STACK into BX
     MOV AX, SI                    ; put AX=SI
@@ -206,7 +197,15 @@ validation_check PROC
     @Skip_dec:                    ; Skip_dec label
      jmp @ENDSORT                 ; jump to label @ENDSORT 
 
-
+ @SELECT_SORT:
+     POP BX                       ; pop a value from STACK into BX   
+     CMP BX, 1                    ; compare BX with 1
+     PUSH BX                      ; push BX onto the STACK                      
+     JLE @ENDSORT            ; jump to label @SKIP_SORTING if BX<=1
+     PUSH BX                      ; push BX onto the STACK    
+     DEC BX                       ; put BX=BX-1
+     MOV CX, BX                   ; put CX=BX
+     MOV AX, SI                   ; put AX=SI
 
 
 QUICK_SORT: 
