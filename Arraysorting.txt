@@ -4,7 +4,22 @@
 msg1  DW  'Enter size of array :$'
 msg2  DW  ,0AH,0DH,'Array elements are :$'  
 msg3  DW  ,0AH,0DH,'size of array must be positive interger:  $'
-ARRAY DW 255 DUP(?)    
+
+msg8  DW  'you can only choose 1 for bubble or 2 for Selection OR 3 OR 4 OR 5 OR 6 :$'
+msg9  DW  ,0AH,0DH,'your sorted array in ascending order is:$'
+msg10 DW  ,0AH,0DH,'your sorted array in descending order is:$'
+
+msg12 DW  ,0AH,0DH,'your array is:$'
+msg13 DW  ,0AH,0DH,'your reversed array is: $'
+ARRAY DW 255 DUP(?)  
+i     DW  ? 
+j     DW  ?
+p     DW  0                           
+r     DW  ?                          
+q     DW  ?
+x     DW  ?
+SIZE  DW ?
+TEMP  DW ?  
 .CODE
 
 MAIN PROC
@@ -142,20 +157,20 @@ validation_check PROC
    @RPRINT:
      CMP BL,36H
      JE  PRINT_ARRAY_REVERSES
-     LEA DX, PROMPT_8              ; load and display the string PROMPT_5, user interface(UI), to take a nother input from user.
+     LEA DX, msg8                  ; load and display the string msg8, user interface(UI), to take a nother input from user.
      MOV AH, 9                     ; AH value for dos interrupt output a message
      INT 21H                       ; interrupt dos that takes input from user
-     MOV CX,1                      ; CX=1
+     MOV CX,1                      ; CX=1              
      Jne @ERROR0                   ; JUMP to ERROR0 if input not equals to ASCII(2)            
    PRINT_ARRAYS:
-      LEA DX, PROMPT_12            ; load and display the string PROMPT_6 
+      LEA DX, msg12               ; load and display the string msg12
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H 
       CALL PRINT_ARRAY            ; call the procedure PRINT_ARRAY
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
    PRINT_ARRAY_REVERSES: 
-      LEA DX, PROMPT_13            ; load and display the string PROMPT_6 
+      LEA DX, msg13               ; load and display the string msg13 
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H 
       CALL PRINT_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
@@ -163,6 +178,62 @@ validation_check PROC
       INT 21H
       RET 
 
+<<<<<<< HEAD
+ 
+=======
+ @CHECK_BUBBLE:                   ; CHECK_BUBBLE label
+    CMP BL,31h                    ; check if input equals to ASCII(1)
+    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
+    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
+
+   @CHECK_SELECT:                 ; CHECK_SELECT label
+    CMP BL,32h                    ; check if input equals to ASCII(2)
+    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
+    JNE @CHECK_INSERTION 
+  
+>>>>>>> 74acbe90a9c8a7f4a1adf5f2c516212e10b82f8b
+   @BUBBLE_SORT:
+    POP BX                        ; pop a value from STACK into BX
+    MOV AX, SI                    ; put AX=SI
+    MOV CX, BX                    ; put CX=BX
+    PUSH BX                       ; push BX onto the STACK  
+    CMP CX,1                      ; IF CX<=1
+    JLE  @Skip_Dec                ; JUMP TO Skip_Dec lable
+    DEC CX                        ; put CX=CX-1
+   
+   @FIRST_LOOP:                   ; loop label
+    MOV BX, CX                    ; put BX=CX
+    MOV SI, AX                    ; put SI=AX
+    MOV DI, AX                    ; put DI=AX
+    INC DI
+    INC DI                        ; put DI=DI+2
+     @SECOND_LOOP:                 ; loop label 
+       MOV DX, [SI]               ; put DL=[SI]
+       CMP DX, [DI]               ; compare DL with [DI]
+       JNG @SKIP_EXCHANGE         ; jump to label @SKIP_EXCHANGE if DL<[DI]
+       XCHG DX, [DI]              ; put DL=[DI], [DI]=DL
+       MOV [SI], DX               ; put [SI]=DL
+     @SKIP_EXCHANGE:              ; SKIP_EXCHANGE label
+      INC SI 
+      INC SI                      ; put SI=SI+2
+      INC DI
+      INC DI                      ; put DI=DI+2
+      DEC BX                      ; put BX=BX-1
+     JNZ @SECOND_LOOP              ; jump to label @SECOND_LOOP if BX!=0
+    LOOP @FIRST_LOOP              ; jump to label @FIRST_LOOP while CX!=0
+   
+    @Skip_dec:                    ; Skip_dec label
+     jmp @ENDSORT                 ; jump to label @ENDSORT 
+
+ @SELECT_SORT:
+     POP BX                       ; pop a value from STACK into BX   
+     CMP BX, 1                    ; compare BX with 1
+     PUSH BX                      ; push BX onto the STACK                      
+     JLE @ENDSORT            ; jump to label @SKIP_SORTING if BX<=1
+     PUSH BX                      ; push BX onto the STACK    
+     DEC BX                       ; put BX=BX-1
+     MOV CX, BX                   ; put CX=BX
+     MOV AX, SI                   ; put AX=SI
 
 
 QUICK_SORT: 
@@ -192,10 +263,51 @@ QUICK_SORT:
         pop  p 
         call QUICK_SORT 
     
-        ;WHEN SORT IS DONE.
-        @bigger1:
+        
+        @bigger1:                 ;WHEN SORT IS DONE.
           RET 
+        
             
+    @SKIP_SORTING:                ; SKIP_SORTING label    
+     @ENDSORT:                    ; ENDSORT label                                      
+      LEA DX, msg9                ; load and display the string PROMPT_6 
+      MOV AH, 9                   ; AH value for dos interrupt output a message
+      INT 21H           
+      LEA SI, ARRAY               ; set SI=offset address of ARRAY
+      POP BP                      ; pop a value from STACK into BX
+      call PRINT_ARRAY            ; call the procedure PRINT_ARRAY
+      LEA DX, msg10               ; load and display the string PROMPT_7 
+      MOV AH, 9                   ; AH value for dos interrupt output a message
+      INT 21H
+      CALL PRINT_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
+      MOV AH, 4CH                 ; return control to DOS
+      INT 21H
+      RET 
+  CONDITION ENDP
+partition proc
+
+                                  ;GET X = ARR[ R ].
+            LEA SI, ARRAY
+            mov  ax, r
+            shl  ax, 1            ;R * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]       
+            mov  x,  ax           ;X = ARR[ R ].              
+            mov  ax, p            ;GET I = P - 1.
+            mov  i,  ax
+            dec  i
+                 
+            mov  ax, p            ;INITIALISE J WITH P.
+            mov  j,  ax
+
+       @for_j:                    ;LOOP J FROM P TO R-1.
+                 
+            LEA SI, ARRAY         ;GET ARR[ J ].
+            mov  ax, j
+            shl  ax, 1            ;J * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]       ;AX = ARR[ J ]
+partition endp   
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
     
@@ -324,11 +436,35 @@ Label_INPUT:                      ; jump label
    INT 21H                        ; read a character
    MOV AH, 1                      ; set input function
    INT 21H                        ; read a character
-                   
+
+Label_SKIP_INPUT:                 ; jump label
+   CMP AL, 0DH                    ; compare AL with CR (if i entered enter button)
+   JE Label_END_INPUT             ; jump to Label_END_INPUT
+   CMP AL, 8H                     ; compare AL with 8H
+   JNE Label_NOT_BACKSPACE        ; jump to Label_NOT_BACKSPACE if AL!=8
+   CMP CH, 0                      ; compare CH with 0
+   JNE Label_CHECK_REMOVE_MINUS   ; jump to Label_CHECK_REMOVE_MINUS if CH!=0
+   CMP CL, 0                      ; compare CL with 0
+   JE Label_SKIP_BACKSPACE        ; jump to Label_SKIP_BACKSPACE if CL=0
+   JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK                   
+   
+
+Label_CHECK_REMOVE_MINUS:         ; jump label
+   CMP CH, 1                      ; compare CH with 1
+   JNE Label_CHECK_REMOVE_PLUS    ; jump to Label_CHECK_REMOVE_PLUS if CH!=1
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+Label_CHECK_REMOVE_PLUS:          ; jump label
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+   JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK
+
+
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
    POP BX                         ; pop  from STACK into BX
    
+
 RET   
                                   ; return control to the calling procedure
  
