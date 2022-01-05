@@ -323,6 +323,22 @@ partition proc
             mov  ax, p            ;GET I = P - 1.
             mov  i,  ax
             dec  i
+                 
+            mov  ax, p            ;INITIALISE J WITH P.
+            mov  j,  ax
+
+       @for_j:                    ;LOOP J FROM P TO R-1.
+                 
+            LEA SI, ARRAY         ;GET ARR[ J ].
+            mov  ax, j
+            shl  ax, 1            ;J * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]       ;AX = ARR[ J ]
+
+            cmp  ax, x            ;COMPARE A[ J ] WITH X.
+            jg   @bigger          ;IF A[ J ] > X, NO SWAP
+    
+            inc  i                ;GET I = I + 1.
 partition endp   
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
@@ -465,6 +481,16 @@ Label_SKIP_INPUT:                 ; jump label
    JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK                   
    
 
+Label_CHECK_REMOVE_MINUS:         ; jump label
+   CMP CH, 1                      ; compare CH with 1
+   JNE Label_CHECK_REMOVE_PLUS    ; jump to Label_CHECK_REMOVE_PLUS if CH!=1
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+Label_CHECK_REMOVE_PLUS:          ; jump label
+   CMP CL, 1                      ; compare CL with 1
+   JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
+   JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK
+
 
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
@@ -510,6 +536,13 @@ DECIMAL_2_ASCII PROC
      OR AX, AX                    ; take OR of Ax with AX
    JNE LABEL_OUTPUT                    ; jump to label @OUTPUT if ZF=0
 
+   MOV AH, 2                      ; set output function
+
+   PRINT:                      ; loop label
+     POP DX                       ; pop a value from STACK to DX
+     OR DL, 30H                   ; convert decimal to ascii code
+     INT 21H                      ; print a character
+   LOOP PRINT                  ; jump to label @PRINT(DISPLAY) if CX!=0
 
 
    POP DX                         ; pop a value from STACK into DX
