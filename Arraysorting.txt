@@ -561,6 +561,43 @@ Label_CHECK_REMOVE_PLUS:          ; jump label
    JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
    JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK
 
+Label_REMOVE_PLUS_MINUS:          ; jump label
+       MOV AH, 2                  ; set output function
+       MOV DL, 20H                ; set DL=' '
+       INT 21H                    ; print a character
+       MOV DL, 8H                 ; set DL=8H
+       INT 21H                    ; print a character
+       JMP Label_READ             ; jump to label Label_READ
+                                  
+     Label_MOVE_BACK:             ; jump label
+     MOV AX, BX                   ; set AX=BX
+     MOV BX, 10                   ; set BX=10
+     DIV BX                       ; set AX=AX/BX
+     MOV BX, AX                   ; set BX=AX
+     MOV AH, 2                    ; set output function
+     MOV DL, 20H                  ; set DL=' '
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; set DL=8H
+     INT 21H                      ; print a character
+     XOR DX, DX                   ; clear DX
+     DEC CL                       ; set CL=CL-1
+     JMP Label_INPUT              ; jump to label Label_INPUT
+     Label_NOT_BACKSPACE:         ; jump label
+     INC CL                       ; set CL=CL+1 (count the num of numbers )
+     CMP AL, 30H                  ; compare AL with 0
+     JL Label_ERROR               ; jump to label Label_ERROR if AL<0
+     CMP AL, 39H                  ; compare AL with 9
+     JG Label_ERROR               ; jump to label Label_ERROR if AL>9
+     AND AX, 000FH                ; convert ascii to decimal code
+     PUSH AX                      ; push AX onto the STACK
+     MOV AX, 10                   ; set AX=10
+     MUL BX                       ; set AX=AX*BX
+     MOV BX, AX                   ; set BX=AX
+     POP AX                       ; pop a value from STACK into AX
+     ADD BX, AX                   ; set BX=AX+BX
+     JS Label_ERROR               ; jump to label Label_ERROR if SF=1
+   JMP Label_INPUT                ; jump to label Label_INPUT
+
 
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
