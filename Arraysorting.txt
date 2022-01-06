@@ -178,20 +178,7 @@ validation_check PROC
       INT 21H
       RET 
 
-<<<<<<< HEAD
- 
-=======
- @CHECK_BUBBLE:                   ; CHECK_BUBBLE label
-    CMP BL,31h                    ; check if input equals to ASCII(1)
-    JE @BUBBLE_SORT               ; JUMP to BUBBLE_SORT if input equals to ASKII(1)
-    JNE @CHECK_SELECT             ; JUMP to CHECK_SELECT if input not equals to ASKII(1)
 
-   @CHECK_SELECT:                 ; CHECK_SELECT label
-    CMP BL,32h                    ; check if input equals to ASCII(2)
-    JE @SELECT_SORT               ; JUMP to SELECT_SORT if input equals to ASCII(2)
-    JNE @CHECK_INSERTION 
-  
->>>>>>> 74acbe90a9c8a7f4a1adf5f2c516212e10b82f8b
    @BUBBLE_SORT:
     POP BX                        ; pop a value from STACK into BX
     MOV AX, SI                    ; put AX=SI
@@ -261,6 +248,42 @@ validation_check PROC
      PUSH AX                      ; push BX onto the STACK                                               
      JLE @SKIP_SORTING            ; jump to label @SKIP_SORTING if BX<=1  
      MOV BX,1
+@FIRST_LOOP3:
+		CMP  BX,AX					;the FIRST loop condition
+		JGE  @SKIP_SORTING
+		MOV  DX,0
+		SHL  BX,1
+		MOV  DX,[SI+BX]
+		SHR  BX,1			    ;edx = Array[i]
+		MOV  TEMP, DX                        				;storing the element (i) into the temporary variable, temp
+		PUSH BX					    ;saving the FIRST loop counter
+     @SECOND_LOOP3:
+		CMP  BX,0					;SECOND loop first condition (i<Itr)
+		JLE  @EXIT_SECOND_LOOP3 
+		DEC  SI
+		DEC  SI
+		SHL  BX,1
+		CMP  [SI+BX],DX
+		SHR  BX,1
+		JLE  @EXIT_SECOND_LOOP3		;SECOND loop second condition (temp<Array[j-1])
+		MOV  DX,0
+		SHL  BX,1					;clear edx 
+		MOV  DX,[SI+BX]
+		INC  SI
+		INC  SI		;edx = Array[j-1]  
+		MOV  [SI+BX], DX
+		SHR  BX,1		;Array[j] = edx
+		DEC  BX					    ;ecx-- (j--)
+		JMP  @SECOND_LOOP3
+     @EXIT_SECOND_LOOP3:
+		MOV  DX,0					;clear edx
+		MOV  DX,TEMP
+		SHL  BX,1			;edx = temp
+		MOV  [SI+BX],DX		;Array[j] = edx
+		POP  BX					    ;restore the FIRST loop counter
+		INC  BX				    ;ecx++ (i++)
+		JMP  @FIRST_LOOP3
+
 
 
 QUICK_SORT: 
@@ -310,7 +333,7 @@ QUICK_SORT:
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
       RET 
-  CONDITION ENDP
+ validation_check ENDP
 partition proc
 
                                   ;GET X = ARR[ R ].
