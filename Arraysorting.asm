@@ -243,53 +243,62 @@ validation_check PROC
     LOOP @FIRST_LOOP2
      jmp @ENDSORT 
     @INSERTION_SORT:  
-     POP AX                       ; pop a value from STACK into BX 
-     CMP AX,1                    ; compare BX with 1
-     PUSH AX                      ; push BX onto the STACK                                               
-     JLE @SKIP_SORTING            ; jump to label @SKIP_SORTING if BX<=1  
-     MOV BX,1
-@FIRST_LOOP3:
-		CMP  BX,AX					;the FIRST loop condition
+     POP AX                       ; pop a value from STACK(SIZE) into AX 
+     CMP AX,1                     ; compare AX with 1
+     PUSH AX                      ; push AX onto the STACK                                               
+     JLE @SKIP_SORTING            ; jump to label @SKIP_SORTING if AX<=1(ONE ELEMENT IN ARRAY --NO NEED TO SORT--)  
+     MOV BX,1                     ; put i=1
+    @I_FIRST_LOOP:
+		CMP  BX,AX				            ;the outer loop condition(i<size)
 		JGE  @SKIP_SORTING
 		MOV  DX,0
 		SHL  BX,1
-		MOV  DX,[SI+BX]
-		SHR  BX,1			    ;edx = Array[i]
-		MOV  TEMP, DX                        				;storing the element (i) into the temporary variable, temp
-		PUSH BX					    ;saving the FIRST loop counter
-     @SECOND_LOOP3:
-		CMP  BX,0					;SECOND loop first condition (i<Itr)
-		JLE  @EXIT_SECOND_LOOP3 
+		MOV  DX,[SI+BX]               ;dx = Array[i]
+		SHR  BX,1			      
+		MOV  TEMP, DX                 ;storing the element (i) into the temporary variable, temp
+		PUSH BX					              ;saving the outer loop counter
+     @I_SECOND_LOOP:
+		CMP  BX,0				              ;inner loop first condition (i>0)
+		JLE  @EXIT_I_SECOND_LOOP 
 		DEC  SI
 		DEC  SI
-		SHL  BX,1
-		CMP  [SI+BX],DX
-		SHR  BX,1
-		JLE  @EXIT_SECOND_LOOP3		;SECOND loop second condition (temp<Array[j-1])
-		MOV  DX,0
-		SHL  BX,1					;clear edx 
-		MOV  DX,[SI+BX]
-		INC  SI
-		INC  SI		;edx = Array[j-1]  
-		MOV  [SI+BX], DX
-		SHR  BX,1		;Array[j] = edx
-		DEC  BX					    ;ecx-- (j--)
-		JMP  @SECOND_LOOP3
-     @EXIT_SECOND_LOOP3:
-		MOV  DX,0					;clear edx
+		SHL  BX,1 
 		MOV  DX,TEMP
-		SHL  BX,1			;edx = temp
-		MOV  [SI+BX],DX		;Array[j] = edx
-		POP  BX					    ;restore the FIRST loop counter
-		INC  BX				    ;ecx++ (i++)
-		JMP  @FIRST_LOOP3
-
+		CMP  [SI+BX],DX            ;inner loop second condition (temp<Array[j-1])
+		JLE  @EXIT_SECOND_LOOP
+		SHR  BX,1
+		INC  SI 
+		INC  SI		
+		MOV  DX,0
+		SHL  BX,1
+		DEC  SI
+		DEC  SI					
+		MOV  DX,[SI+BX]            ;dx = Array[j-1]
+		INC  SI
+		INC  SI		  
+		MOV  [SI+BX], DX           ;Array[j] = dx
+		SHR  BX,1		
+		DEC  BX					           ;bx-- (j--)
+		JMP  @I_SECOND_LOOP
+	@EXIT_SECOND_LOOP:
+		SHR  BX,1
+		INC  SI 
+		INC  SI
+		JMP  @EXIT_I_SECOND_LOOP 
+     @EXIT_I_SECOND_LOOP:
+		MOV  DX,0					
+		MOV  DX,TEMP              ;dx = temp
+		SHL  BX,1	
+		MOV  [SI+BX],DX		       ;Array[j] = dx
+		POP  BX					         ;restore the outer loop counter
+		INC  BX				           ;bx++ (i++)
+		JMP  @I_FIRST_LOOP
 
 
 QUICK_SORT: 
         mov  ax, p
         cmp  ax, r                  ;COMPARE P WITH R
-        jge  @bigger1                ;IF P = R, SORT IS DONE.
+        jge  @IS_BIGGER                ;IF P = R, SORT IS DONE.
     
         ;CALL PARTITION(A, P, R).
         call partition
@@ -314,7 +323,7 @@ QUICK_SORT:
         call QUICK_SORT 
     
         
-        @bigger1:                 ;WHEN SORT IS DONE.
+        @IS_BIGGER:                 ;WHEN SORT IS DONE.
           RET 
         
             
@@ -359,9 +368,50 @@ partition proc
             mov  ax, [ si ]       ;AX = ARR[ J ]
 
             cmp  ax, x            ;COMPARE A[ J ] WITH X.
-            jg   @bigger          ;IF A[ J ] > X, NO SWAP
+            jg   @GREATER          ;IF A[ J ] > X, NO SWAP
     
             inc  i                ;GET I = I + 1.
+            ;GET ARR[ I ].
+                mov  di, offset arr
+                mov  cx, i
+                shl  cx, 1              ;I * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+                add  di, cx
+                mov  cx, [ di ]         ;CX = ARR[ I ].
+
+                ;EXCHANGE ARR[ I ] WITH ARR[ J ].
+                mov  [ di ], ax
+                mov  [ si ], cx
+            
+                ;GET NEXT J.
+               @ GREATER:
+
+                    inc  j              ;J = J + 1.
+                    mov  ax, r
+                    cmp  j,  ax         ;COMPARE J WITH R.
+                    jl   for_j          ;IF J ≤ R-1 CONTINUE LOOP.
+
+            ;GET ARR[ i+1 ].
+            inc  i
+            mov  si, offset arr
+            mov  ax, i
+            shl  ax, 1                  ;(I+1) * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  si, ax
+            mov  ax, [ si ]             ;AX = ARR[ I+1 ].
+
+            ;GET ARR[ R ].
+            mov  di, offset arr
+            mov  cx, r
+            shl  cx, 1                  ;R * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
+            add  di, cx
+            mov  cx, [ di ]             ;CX = ARR[ R ].
+
+            ;EXCHANGE ARR[ I+1 ] WITH ARR[ R ].
+            mov  [ di ], ax
+            mov  [ si ], cx  
+
+            ;RETURN I+1.
+            mov  ax, i
+            ret
 partition endp   
 
 
