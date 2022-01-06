@@ -363,6 +363,12 @@ partition proc
     
             inc  i                ;GET I = I + 1.
 partition endp   
+
+
+
+
+
+
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
         
     
@@ -383,12 +389,8 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    XOR DX, DX                     ; clear DX
    MOV AH, 1                      ; input function
    INT 21H                        ; read input
-   AND AX, 000FH                  ; ascii 2 decimal 
-
-   MOV BX, AX                     ; set BX=AX+BX
-   MOV AH, 1                      ; set input function
-   INT 21H                        ; read input
-
+ 
+   INC CL
  CMP AL, "-"                    ; compare AL with "-"
  JE Label_ERROR2                     ; jump to label Label_ERROR2 if AL="-"
  CMP AL, "+"                    ; compare AL with "+"
@@ -404,6 +406,57 @@ Label_SKIP_INPUT1:                ; jump label
 
   CMP AL, 0DH                    ; compare AL with enter
 
+JE Label_END_INPUT1               ; jump to label Label_END_INPUT
+     CMP AL, 8H                   ; compare AL with 8H
+     JNE Label_NOT_BACKSPACE1          ; jump to label Label_NOT_BACKSPACE if AL!=8
+     CMP CH, 0                    ; compare CH with 0
+     JNE Label_CHECK_REMOVE_PLUS1      ; jump to label Label_CHECK_REMOVE_MINUS if CH!=0
+     CMP CL, 0                    ; compare CL with 0
+     JE Label_SKIP_BACKSPACE1          ; jump to label Label_SKIP_BACKSPACE if CL=0
+     JMP Label_MOVE_BACK1              ; jump to label Label_MOVE_BACK
+     CMP CL, 1                    ; compare CL with 1
+     JE Label_REMOVE_PLUS1             ; jump to label Label_REMOVE_PLUS_MINUS if CL=1
+     Label_CHECK_REMOVE_PLUS1:         ; jump label
+     CMP CL, 1                    ; compare CL with 1
+     JE Label_REMOVE_PLUS1             ; jump to label Label_REMOVE_PLUS_MINUS if CL=1
+     JMP Label_MOVE_BACK1              ; jump to label Label_MOVE_BACK
+     Label_REMOVE_PLUS1:               ; jump label
+       MOV AH, 2                  ; set output function
+       MOV DL, 20H                ; set DL=' '
+       INT 21H                    ; print a character
+       MOV DL, 8H                 ; set DL=8H
+       INT 21H                    ; print a character
+       JMP Label_READ1                 ; jump to label Label_READ
+                                  
+     Label_MOVE_BACK1:                 ; MOVE_BACK1 label
+     MOV AX, BX                   ; set AX=BX
+     MOV BX, 10                   ; set BX=10
+     DIV BX                       ; set AX=AX/BX
+     MOV BX, AX                   ; set BX=AX
+     MOV AH, 2                    ; set output function
+     MOV DL, 20H                  ; set DL=' '
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; set DL=8H
+     INT 21H                      ; print a character
+     XOR DX, DX                   ; clear DX
+     DEC CL                       ; set CL=CL-1
+     JMP Label_INPUT1                  ; jump to label Label_INPUT
+     Label_NOT_BACKSPACE1:             ; jump label
+     INC CL                       ; set CL=CL+1
+     CMP AL, 30H                  ; compare AL with 0
+     JL Label_ERROR1                   ; jump to label Label_ERROR if AL<0
+     CMP AL, 39H                  ; compare AL with 9
+     JG Label_ERROR1                   ; jump to label Label_ERROR if AL>9
+     AND AX, 000FH                ; convert ascii to decimal code
+     PUSH AX                      ; push AX onto the STACK
+     MOV AX, 10                   ; set AX=10
+     MUL BX                       ; set AX=AX*BX
+     MOV BX, AX                   ; set BX=AX
+     POP AX                       ; pop a value from STACK into AX
+     ADD BX, AX                   ; set BX=AX+BX
+     JS Label_ERROR1                   ; jump to label Label_ERROR if SF=1
+   JMP Label_INPUT1                    ; jump to label Label_INPUT
+
  Label_ERROR1:                       ; jump label
    MOV AH, 2                      ; output function
    MOV DL, 7H                     ; DL=7H
@@ -413,7 +466,24 @@ Label_SKIP_INPUT1:                ; jump label
    LEA DX, msg3
    MOV AH, 9
    INT 21H
+	RET
+
+Label_CLEAR1:                       ; jump label
+     MOV DL, 8H                   ; set DL=8H   (backspace in ascii)
+     INT 21H                      ; print a character
+     MOV DL, 20H                  ; set DL=' '         (Space in ascii)
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; set DL=8H          (backspace in ascii)
+     INT 21H                      ; print a character
+   LOOP Label_CLEAR1                   ; jump to label Label_CLEAR if CX!=0
+
    jmp Label_READ1
+
+Label_END_INPUT1:                   ; jump label
+   CMP CH, 1                      ; compare CH with 1   
+   JNE Label_EXIT1                     ; jump to label Label_EXIT if CH!=1
+   NEG BX                         ; negate BX
+   Label_EXIT1:                        ; jump label
 
    MOV AX, BX                     ; AX=BX
    POP DX                         ; pop from STACK to DX
@@ -513,6 +583,43 @@ Label_CHECK_REMOVE_PLUS:          ; jump label
    CMP CL, 1                      ; compare CL with 1
    JE Label_REMOVE_PLUS_MINUS     ; jump to Label_REMOVE_PLUS_MINUS if CL=1
    JMP Label_MOVE_BACK            ; jump to Label_MOVE_BACK
+
+Label_REMOVE_PLUS_MINUS:          ; jump label
+       MOV AH, 2                  ; set output function
+       MOV DL, 20H                ; set DL=' '
+       INT 21H                    ; print a character
+       MOV DL, 8H                 ; set DL=8H
+       INT 21H                    ; print a character
+       JMP Label_READ             ; jump to label Label_READ
+                                  
+     Label_MOVE_BACK:             ; jump label
+     MOV AX, BX                   ; set AX=BX
+     MOV BX, 10                   ; set BX=10
+     DIV BX                       ; set AX=AX/BX
+     MOV BX, AX                   ; set BX=AX
+     MOV AH, 2                    ; set output function
+     MOV DL, 20H                  ; set DL=' '
+     INT 21H                      ; print a character
+     MOV DL, 8H                   ; set DL=8H
+     INT 21H                      ; print a character
+     XOR DX, DX                   ; clear DX
+     DEC CL                       ; set CL=CL-1
+     JMP Label_INPUT              ; jump to label Label_INPUT
+     Label_NOT_BACKSPACE:         ; jump label
+     INC CL                       ; set CL=CL+1 (count the num of numbers )
+     CMP AL, 30H                  ; compare AL with 0
+     JL Label_ERROR               ; jump to label Label_ERROR if AL<0
+     CMP AL, 39H                  ; compare AL with 9
+     JG Label_ERROR               ; jump to label Label_ERROR if AL>9
+     AND AX, 000FH                ; convert ascii to decimal code
+     PUSH AX                      ; push AX onto the STACK
+     MOV AX, 10                   ; set AX=10
+     MUL BX                       ; set AX=AX*BX
+     MOV BX, AX                   ; set BX=AX
+     POP AX                       ; pop a value from STACK into AX
+     ADD BX, AX                   ; set BX=AX+BX
+     JS Label_ERROR               ; jump to label Label_ERROR if SF=1
+   JMP Label_INPUT                ; jump to label Label_INPUT
 
 
    POP DX                         ; pop  from STACK into DX
