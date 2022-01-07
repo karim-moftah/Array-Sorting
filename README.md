@@ -151,6 +151,64 @@ a[in] = temp; // insert marked item
 } // end insertionSort()
 ````
 
+###  Quick Sort Algorithm
+> **Description**
+
+quick sort algorithm uses a divide and conquer approach to sort a list (array) by recursively partitioning and sorting it. The array is changed in place
+
+> **Details**
+
+`Divide`: In Divide, first pick a pivot element. After that, partition or rearrange the array into two sub-arrays such that each element in the left sub-array is less than or equal to the pivot element and each element in the right sub-array is larger than the pivot element.
+
+`Conquer`: Recursively, sort two subarrays with Quicksort.
+
+`Combine`: Combine the already sorted array.
+
+Quicksort picks an element as pivot, and then it partitions the given array around the picked pivot element. In quick sort, a large array is divided into two arrays in which one holds values that are smaller than the specified value (Pivot), and another array holds the values that are greater than the pivot.
+
+After that, left and right sub-arrays are also partitioned using the same approach. It will continue until the single element remains in the sub-array.
+
+##### Choosing the pivot
+Picking a good pivot is necessary for the fast implementation of quicksort. However, it is typical to determine a good pivot. Some of the ways of choosing a pivot are as follows -
+
+* Pivot can be random, i.e. select the random pivot from the given array.
+* Pivot can either be the rightmost element of the leftmost element of the given array.
+* Select median as the pivot element.
+
+
+> **Quick Sort Animation**
+
+(animation/quick_sort.mp4)
+
+> **Quick Sort in java**
+
+````java
+Quick_sort(A, start, end)
+{
+If (start>=end)
+Return
+Pindex=Partition(A, start, end)
+Quick_sort(A,start,Pindex-1)
+Quick_sort(A,Pindex+1,end)
+}
+
+Partition(A, start, end)
+{
+Pivot=A[end]
+Pindex=start
+For (i=start ; end-1; i++)
+{
+If (A[i]<=pivot)
+{
+Swap(A[i], A[Pindex])
+Pindex=Pindex+1
+}
+}
+Swap(A[Pindex], A[end])
+Return (Pindex)
+}
+````
+
 ## Output
 ![](animation/output.png)
 
