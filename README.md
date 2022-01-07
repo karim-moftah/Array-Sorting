@@ -39,6 +39,29 @@ Bubble Sort compares neighboring elements and forces larger elements to 'bubble'
 -Sorting takes place by stepping through all the elements one-by-one and comparing it with the adjacent element and swapping them if required.
 
 
+> **Bubble Sort Animation**
+
+(animation/bubble_sort.mp4)
+
+> **Bubble Sort in java**
+
+````java
+void bubbleSort()
+{
+int out, in;
+for(out=nElems-1; out>1; out--) // outer loop (backward)
+    for(in=0; in<out; in++) // inner loop (forward)
+        if( a[in] > a[in+1] ) // out of order?
+            swap(in, in+1); // swap them
+} // end bubbleSort()
+//--------------------------------------------------------------
+void swap(int one, int two)
+{
+long temp = a[one];
+a[one] = a[two];
+a[two] = temp;
+}
+````
 
 
 
