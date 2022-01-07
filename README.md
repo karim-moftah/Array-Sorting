@@ -78,7 +78,33 @@ In selection sort, the smallest value among the unsorted elements of the array i
 In selection sort, the first smallest element is selected from the unsorted array and placed at the first position. After that second smallest element is selected and placed in the second position. The process continues until the array is entirely sorted.
 
 
+> **Selection Sort Animation**
 
+(animation/selection_sort.mp4)
+
+> **Selection Sort in java**
+
+````java
+void selectionSort()
+{
+int out, in, min;
+for(out=0; out<nElems-1; out++) // outer loop
+{
+min = out; // minimum
+for(in=out+1; in<nElems; in++)// inner loop
+if(a[in] < a[min] ) // if min greater,
+min = in; // we have a new min
+swap(out, min); // swap them
+} // end for(out)
+} // end selectionSort()
+//--------------------------------------------------------------
+void swap(int one, int two)
+{
+long temp = a[one];
+a[one] = a[two];
+a[two] = temp;
+}
+````
 
 
 
