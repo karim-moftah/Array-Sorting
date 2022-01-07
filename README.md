@@ -21,6 +21,21 @@
 |6| `Reverse Array`
 
 
+## Project Tool
+ EMU8086
+ 
+## Project Language
+assembly x86
+## Summury
+
+this is an array sorting project written in assembly x86 sorts an array of elements using Bubble sort, Selection sort, Insertion sort or Quick sort and prints the sorted array in ascending and descending order
+
+````
+1- Enter array size 
+2- Enter array elements 
+3- choose one of the sorting algorithms
+````
+
 ###  Bubble Sort Algorithm
 > **Description**
 
