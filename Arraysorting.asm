@@ -1,4 +1,4 @@
-.MODEL SMALL
+﻿.MODEL SMALL
 .STACK 100H
 .DATA
 msg1  DW  'Enter size of array :$'
@@ -552,7 +552,7 @@ GET_ARRAY PROC ; to get array elements size in BX , address of ARRAY[0] in SI
    
    MOV CX, BX                     ;  CX=BX
    Label_GET_ARRAY:               ; loop label
-     CALL ASCII_2_DECIMAL         ; call  ASCII_2_DECIMAL
+     CALL ASCI_2_DECIMAL         ; call  ASCII_2_DECIMAL
      MOV [SI], AX                 ; [SI]=AX
      ADD SI, 2                    ; SI=SI+2
      MOV DL, 0AH                  ; new line
