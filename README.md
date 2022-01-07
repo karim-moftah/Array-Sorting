@@ -1,13 +1,13 @@
 # Array-Sorting Algorithms
 
 ## Project Contributers:
-| # | Name | Github link |
-| ------ | ------ |--------|
-| 1 | Karim Moftah |[karim-moftah]
-| 2| Abdelrahman Sayed |[abdelrahman-Sayed-abdelhamid]
-| 3 | Mohammed Salah |[mohamedsalah674]
-| 4| Mohammed Ahmed Ibrahim |[mohamedmahfouz3]
-| 5 |Ammar Adel |[ammaradel17]
+| # | Name | Github link |Role
+| ------ | ------ |--------|----------|
+| 1 | Karim Moftah | [karim-moftah]|Get_Size + Reverse Array+ README
+| 2| Abdelrahman Sayed | [abdelrahman-Sayed-abdelhamid]|Print Array + decimal_2_ascii
+| 3 | Mohammed Salah |[mohamedsalah674]|Get_Array + Ascii_2_decimal
+| 4| Mohammed Ahmed Ibrahim |[mohamedmahfouz3]|Bubble sort + Selection sort
+| 5 |Ammar Adel |[ammaradel17]|Insertion sort + Quick sort
 
 
 ## Project Functions:
