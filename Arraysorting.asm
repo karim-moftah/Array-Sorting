@@ -4,11 +4,14 @@
 msg1  DW  'Enter size of array :$'
 msg2  DW  ,0AH,0DH,'Array elements are :$'  
 msg3  DW  ,0AH,0DH,'size of array must be positive interger:  $'
-
+msg4  DW  'please,choose Array type for sort (enter 1 for Bubble sort)$'
+msg5  DW  'OR (enter 2 for SELECTION sort) OR(enter 3 for Insertion sort)$' 
+msg6  DW  'OR (enter 4 for Quick sort) OR (enter 5 to display array)$'  
+msg7  DW  'OR (enter 6 to reverse array):$'
 msg8  DW  'you can only choose 1 for bubble or 2 for Selection OR 3 OR 4 OR 5 OR 6 :$'
 msg9  DW  ,0AH,0DH,'your sorted array in ascending order is:$'
 msg10 DW  ,0AH,0DH,'your sorted array in descending order is:$'
-
+msg11 DW  ,0AH,0DH,'your Array has no elements,please enter POSITIVE integer:$'
 msg12 DW  ,0AH,0DH,'your array is:$'
 msg13 DW  ,0AH,0DH,'your reversed array is: $'
 ARRAY DW 255 DUP(?)  
@@ -29,12 +32,66 @@ MAIN PROC
      	LEA DX, msg1             	; load address of msg1 in DX
      	MOV AH, 9                    	; AH value for dos interrupt to print msg1
      	INT 21H                      	; interrupt dos that takes input from user
-    
      	LEA SI, ARRAY              	; load adderss of ARRAY in SI
-	CALL Get_Size			; get size and put it in AX
-
-
-
+@IF_No_Elements:
+     CALL Get_Size                ; call the procedure GET_Size
+     AND AX, 00FFH                ; to get the value of only AL as the size of array
+     MOV BX,AX                    ; put value of AL in to BX register BX=AX
+     CMP BX,0                     ; IF input==0
+     je @IF_NO_ELEMENTS1         ; JUMP to IF_NO_ELEMENTES1 lable if the input equals(0)
+     LEA DX, msg2             ; load and display the string msg2, user interface(UI), to take the farray elements from user.
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H
+     MOV dl, 10
+     MOV ah, 02h
+     INT 21h
+     MOV dl, 13
+     MOV ah, 02h
+     INT 21h                      ; interrupt dos that takes input from user
+     CALL GET_ARRAY              ; call the procedure GET_ARRAY
+   @CHOOSE:  
+     LEA DX, msg4             ; load and display the string msg4 to get the value of the condition variable (1,2).
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H
+     MOV dl, 10
+     MOV ah, 02h
+     INT 21h
+     MOV dl, 13
+     MOV ah, 02h
+     INT 21h                      ; interrupt dos that takes input from user 
+     LEA DX, msg5             ; load and display the string msg5 to get the value of the condition variable (1,2).
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H
+     MOV dl, 10
+     MOV ah, 02h
+     INT 21h
+     MOV dl, 13
+     MOV ah, 02h
+     INT 21h         
+     LEA DX, msg6             ; load and display the string msg6 to get the value of the condition variable (1,2).
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H
+     MOV dl, 10
+     MOV ah, 02h
+     INT 21h
+     MOV dl, 13
+     MOV ah, 02h
+     INT 21h     
+     LEA DX, msg7             ; load and display the string msg7 to get the value of the condition variable (1,2).
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H  
+     LEA SI,ARRAY                 ; load array offset to SI
+     CALL validation_check               ; call validation_check function to make a decision of sort type to use 
+ 
+    @IF_NO_ELEMENTS1:
+     LEA DX, msg11             ; load and display the string msg11
+     MOV AH, 9                    ; AH value for dos interrupt output a message
+     INT 21H                      ; interrupt dos that takes input from user
+     jmp @IF_No_Elements             ; jump IF_No_Elements label 
+     MOV AH, 4CH                  ; AH Value for dos interrupt exit program
+     INT 21H                      ; interrupt dos             
+ 
+  MAIN ENDP
 
 
 validation_check PROC 
@@ -161,19 +218,19 @@ validation_check PROC
      MOV AH, 9                     ; AH value for dos interrupt output a message
      INT 21H                       ; interrupt dos that takes input from user
      MOV CX,1                      ; CX=1              
-     Jne @ERROR0                   ; JUMP to ERROR0 if input not equals to ASCII(2)            
+     Jne lable_ERROR0                   ; JUMP to ERROR0 if input not equals to ASCII(2)            
    PRINT_ARRAYS:
       LEA DX, msg12               ; load and display the string msg12
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H 
-      CALL PRINT_ARRAY            ; call the procedure PRINT_ARRAY
+      CALL DISPLAY_ARRAY            ; call the procedure PRINT_ARRAY
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
    PRINT_ARRAY_REVERSES: 
       LEA DX, msg13               ; load and display the string msg13 
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H 
-      CALL PRINT_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
+      CALL DISPLAY_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
       RET 
@@ -185,7 +242,7 @@ validation_check PROC
     MOV CX, BX                    ; put CX=BX
     PUSH BX                       ; push BX onto the STACK  
     CMP CX,1                      ; IF CX<=1
-    JLE  @Skip_Dec                ; JUMP TO Skip_Dec lable
+    JLE  @ENDSORT                ; JUMP TO Skip_Dec lable
     DEC CX                        ; put CX=CX-1
    
    @FIRST_LOOP:                   ; loop label
@@ -208,15 +265,14 @@ validation_check PROC
       DEC BX                      ; put BX=BX-1
      JNZ @SECOND_LOOP              ; jump to label @SECOND_LOOP if BX!=0
     LOOP @FIRST_LOOP              ; jump to label @FIRST_LOOP while CX!=0
+    JMP @ENDSORT
    
-    @Skip_dec:                    ; Skip_dec label
-     jmp @ENDSORT                 ; jump to label @ENDSORT 
 
  @SELECT_SORT:
      POP BX                       ; pop a value from STACK into BX   
      CMP BX, 1                    ; compare BX with 1
      PUSH BX                      ; push BX onto the STACK                      
-     JLE @ENDSORT            ; jump to label @SKIP_SORTING if BX<=1
+     JLE @ENDSORT            ; jump to label @ENDSORT if BX<=1
      PUSH BX                      ; push BX onto the STACK    
      DEC BX                       ; put BX=BX-1
      MOV CX, BX                   ; put CX=BX
@@ -246,11 +302,11 @@ validation_check PROC
      POP AX                       ; pop a value from STACK(SIZE) into AX 
      CMP AX,1                     ; compare AX with 1
      PUSH AX                      ; push AX onto the STACK                                               
-     JLE @SKIP_SORTING            ; jump to label @SKIP_SORTING if AX<=1(ONE ELEMENT IN ARRAY --NO NEED TO SORT--)  
+     JLE @ENDSORT            ; jump to label @ENDSORT if AX<=1(ONE ELEMENT IN ARRAY --NO NEED TO SORT--)  
      MOV BX,1                     ; put i=1
     @I_FIRST_LOOP:
 		CMP  BX,AX				            ;the outer loop condition(i<size)
-		JGE  @SKIP_SORTING
+		JGE  @ENDSORT
 		MOV  DX,0
 		SHL  BX,1
 		MOV  DX,[SI+BX]               ;dx = Array[i]
@@ -326,19 +382,18 @@ QUICK_SORT:
         @IS_BIGGER:                 ;WHEN SORT IS DONE.
           RET 
         
-            
-    @SKIP_SORTING:                ; SKIP_SORTING label    
+                
      @ENDSORT:                    ; ENDSORT label                                      
       LEA DX, msg9                ; load and display the string PROMPT_6 
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H           
       LEA SI, ARRAY               ; set SI=offset address of ARRAY
       POP BP                      ; pop a value from STACK into BX
-      call PRINT_ARRAY            ; call the procedure PRINT_ARRAY
+      call DISPLAY_ARRAY            ; call the procedure PRINT_ARRAY
       LEA DX, msg10               ; load and display the string PROMPT_7 
       MOV AH, 9                   ; AH value for dos interrupt output a message
       INT 21H
-      CALL PRINT_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
+      CALL DISPLAY_ARRAY_REVERSE    ; call the procedure PRINT_ARRAY_REVERSE
       MOV AH, 4CH                 ; return control to DOS
       INT 21H
       RET 
@@ -372,7 +427,7 @@ partition proc
     
             inc  i                ;GET I = I + 1.
             ;GET ARR[ I ].
-                mov  di, offset arr
+                LEA  di, ARRAY
                 mov  cx, i
                 shl  cx, 1              ;I * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
                 add  di, cx
@@ -383,23 +438,23 @@ partition proc
                 mov  [ si ], cx
             
                 ;GET NEXT J.
-               @ GREATER:
+               @GREATER:
 
                     inc  j              ;J = J + 1.
                     mov  ax, r
                     cmp  j,  ax         ;COMPARE J WITH R.
-                    jl   for_j          ;IF J ≤ R-1 CONTINUE LOOP.
+                    jl   @for_j          ;IF J ≤ R-1 CONTINUE LOOP.
 
             ;GET ARR[ i+1 ].
             inc  i
-            mov  si, offset arr
+            LEA  si, ARRAY
             mov  ax, i
             shl  ax, 1                  ;(I+1) * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
             add  si, ax
             mov  ax, [ si ]             ;AX = ARR[ I+1 ].
 
             ;GET ARR[ R ].
-            mov  di, offset arr
+            LEA  di, ARRAY
             mov  cx, r
             shl  cx, 1                  ;R * 2, BECAUSE EVERY COUNTER IS 2 BYTES.
             add  di, cx
@@ -413,10 +468,6 @@ partition proc
             mov  ax, i
             ret
 partition endp   
-
-
-
-
 
 
 Get_Size PROC		; function to take array size from user (must be positive number from 0 to 255)
@@ -440,8 +491,8 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    MOV AH, 1                      ; input function
    INT 21H                        ; read input
  
-   INC CL
  CMP AL, "-"                    ; compare AL with "-"
+ INC CL
  JE Label_ERROR2                     ; jump to label Label_ERROR2 if AL="-"
  CMP AL, "+"                    ; compare AL with "+"
  JE Label_PLUS1                      ; jump to label Label_PLUS if AL="+"
@@ -609,8 +660,6 @@ JMP Label_READ                    ; jump to label Label_READ
 Label_INPUT:                      ; jump label
    MOV AH, 1                      ; input function
    INT 21H                        ; read a character
-   MOV AH, 1                      ; set input function
-   INT 21H                        ; read a character
 
 Label_SKIP_INPUT:                 ; jump label
    CMP AL, 0DH                    ; compare AL with CR (if i entered enter button)
@@ -689,15 +738,12 @@ Label_END_INPUT:                  ; jump label
      CMP CH, 1                    ; compare CH with 1   
      JNE Label_EXIT               ; jump to  Label_EXIT if CH!=1
      NEG BX                       ; negate BX
-Label_EXIT:                       ; jump label
-
-
-
+Label_EXIT: 
+  MOV AX, BX                      
    POP DX                         ; pop  from STACK into DX
    POP CX                         ; pop  from STACK into CX
    POP BX                         ; pop  from STACK into BX
    
-
 RET   
                                   ; return control to the calling procedure
  
@@ -754,11 +800,6 @@ DECIMAL_2_ASCII PROC
  DECIMAL_2_ASCII ENDP
 
 
-
-
-
-
-
 DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0] in SI , size in BX 
   
    
@@ -766,7 +807,7 @@ DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0
    PUSH CX                        ; push CX in the STACK
    PUSH DX                        ; push DX in the STACK
 
-   MOV CX, BX                     ;  CX=BX
+   MOV CX, BP                     ;  CX=BX
    LABEL_PRINT_ARRAY:             ; loop label
      XOR AH, AH                   ; AH = 0
      MOV AX, [SI]                 ; AL=[SI]
@@ -783,23 +824,37 @@ DISPLAY_ARRAY PROC 		  ; function to display array elements	, address of ARRAY[0
 
    RET                            ; return control to the calling procedure
  DISPLAY_ARRAY ENDP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ DISPLAY_ARRAY_REVERSE PROC
+    ; this procedure will print reverse the elements of a given array(Descending order)
+   ; input : SI=offset address of the array
+   ;       : BX=size of the array  
+   ; output : none 
+   PUSH AX                        ; push AX onto the STACK   
+   PUSH CX                        ; push CX onto the STACK
+   PUSH DX                        ; push DX onto the STACK 
+   LEA SI,ARRAY                    
+   MOV CX,BP
+   MOV BX,BP                      ; set CX=BX
+   MOV DI,SI                      ; set DI=SI
+   SUB BX,1                       ; set bx=bx-1 
+   ADD BX,BX                      ; BX=BX*2
+   ADD SI,BX                      ; set SI=BX
+   @DISPLAY_ARRAY_REVERSE:          ; loop label
+     XOR AH, AH                   ; clear AH
+     MOV AX, [SI]                 ; set AL=[SI]
+     CALL DECIMAL_2_ASCII                  ; call the procedure OUTDEC
+     MOV AH, 2                    ; set output function
+     MOV DL, 20H                  ; set DL=20H
+     INT 21H                      ; print a character
+     DEC SI                       ; set SI=SI-2
+     DEC SI  
+   LOOP @DISPLAY_ARRAY_REVERSE      ; jump to label @PRINT_ARRAY while CX!=0
+   POP DX                         ; pop a value from STACK into DX
+   POP CX                         ; pop a value from STACK into CX
+   POP AX                         ; pop a value from STACK into AX
+   RET                            ; return control to the calling procedure   
+  
+ DISPLAY_ARRAY_REVERSE ENDP
 
 END MAIN
