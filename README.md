@@ -208,7 +208,8 @@ a[in] = temp; // insert marked item
 } // end for
 } // end insertionSort()
 
-
+## Output
+![](animation/output.png)
 
 
 ## Credit
