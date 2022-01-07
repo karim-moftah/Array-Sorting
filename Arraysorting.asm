@@ -516,7 +516,7 @@ JE Label_END_INPUT1               ; jump to label Label_END_INPUT
    LEA DX, msg3
    MOV AH, 9
    INT 21H
-	RET
+   JMP Label_READ1
 
 Label_CLEAR1:                       ; jump label
      MOV DL, 8H                   ; set DL=8H   (backspace in ascii)
