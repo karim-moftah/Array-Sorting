@@ -236,18 +236,21 @@ Return (Pindex)
 }
 ````
 
+## sorting algorithms complexity
+![](animation/sorting_comp.png)
 ## Output
 ![](animation/output.png)
 
 
-## CreditF
+## Credit
 
 > **Thanks to**
 * `Prof. Abdelhamid Attaby` 
 *  `Eng. Ahmed Bakr`
 
 for thier support during the course .
-## Refernces 
+## Refernces
+prentice_the_intel_microprocessors_8th_edition_013.
 
    [karim-moftah]: <https://github.com/karim-moftah>
    [abdelrahman-Sayed-abdelhamid]: <https://github.com/abdelrahman-Sayed-abdelhamid>
