@@ -36,6 +36,18 @@ this is an array sorting project written in assembly x86 sorts an array of eleme
 3- choose one of the sorting algorithms
 ````
 
+## Introduction 
+
+A Sorting Algorithm is used to rearrange a given array or list elements according to a comparison operator on the elements. The comparison operator is used to decide the new order of element in the respective data structure.
+
+The efficiency of any sorting algorithm is determined by the time complexity and space complexity of the algorithm.
+
+1. Time Complexity: Time complexity refers to the time taken by an algorithm to complete its execution with respect to the size of the input. 
+ 2. Space Complexity: Space complexity refers to the total amount of memory used by the algorithm for a complete execution. It includes both the auxiliary memory and the input.
+
+
+---
+
 ###  Bubble Sort Algorithm
 > **Description**
 
