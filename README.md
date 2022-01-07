@@ -25,7 +25,14 @@
 
 
 
+## Credit
 
+> **Thanks to**
+* `Prof. Abdelhamid Attaby` 
+*  `Eng. Ahmed Bakr`
+
+for thier support during the course .
+## Refernces 
 
    [karim-moftah]: <https://github.com/karim-moftah>
    [abdelrahman-Sayed-abdelhamid]: <https://github.com/abdelrahman-Sayed-abdelhamid>
