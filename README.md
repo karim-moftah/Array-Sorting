@@ -64,6 +64,23 @@ a[two] = temp;
 ````
 
 
+###  Selection Sort Algorithm
+> **Description**
+
+selection sort works by selecting an item in the list and comparing it to another item and making a swap if the items are ordered incorrectly. Unlike bubble sort, selection sort works by sorting the smallest items into position first.
+
+> **Details**
+
+If the given array has to be sorted in ascending order, then selection sort will start by comparing the first element of the array with the second element, if the first element is greater than the second element, it will swap both the elements, and then move on to compare the second and the third element, and so on.
+
+In selection sort, the smallest value among the unsorted elements of the array is selected in every pass and inserted to its appropriate position into the array. It is also the simplest algorithm. It is an in-place comparison sorting algorithm. In this algorithm, the array is divided into two parts, first is sorted part, and another one is the unsorted part. Initially, the sorted part of the array is empty, and unsorted part is the given array. Sorted part is placed at the left, while the unsorted part is placed at the right.
+
+In selection sort, the first smallest element is selected from the unsorted array and placed at the first position. After that second smallest element is selected and placed in the second position. The process continues until the array is entirely sorted.
+
+
+
+
+
 
 ###  Insertion Sort Algorithm
 > **Description**
