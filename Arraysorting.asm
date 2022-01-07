@@ -481,7 +481,7 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    JMP Label_READ1                     ; jump to label Label_READ
    Label_SKIP_BACKSPACE1:              ; SKIP_BACKSPACE1 label
    MOV AH, 2                      ; output function
-   MOV DL, 20H                    ; DL=' ' space
+   MOV DL, 20H                    ; DL=' ' (space)
    INT 21H                        ; print a character
    Label_READ1:                        ; READ1 label
 
@@ -604,12 +604,12 @@ GET_ARRAY PROC ; to get array elements size in BX , address of ARRAY[0] in SI
    MOV CX, BX                     ;  CX=BX
    Label_GET_ARRAY:               ; loop label
      CALL ASCI_2_DECIMAL         ; call  ASCII_2_DECIMAL
-     MOV [SI], AX                 ; [SI]=AX
+     MOV [SI], AX                 ; put [SI]=AX
      ADD SI, 2                    ; SI=SI+2
      MOV DL, 0AH                  ; new line
      MOV AH, 2                    ; for print 
      INT 21H                      ; print a character
-   LOOP Label_GET_ARRAY           ; jump to Label_GET_ARRAY while CX!=0
+   LOOP Label_GET_ARRAY           ; jump to label --> Label_GET_ARRAY while CX!=0
    POP DX                         ; pop  from STACK to DX
    POP CX                         ; pop  from STACK to CX
    POP AX                         ; pop  from STACK to AX
