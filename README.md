@@ -68,7 +68,7 @@ Bubble Sort compares neighboring elements and forces larger elements to 'bubble'
 
 > **Bubble Sort Animation**
 
-![](animation/bubble_sort.mp4)
+![](animation/bubble_sort.gif)
 
 > **Bubble Sort in java**
 
@@ -107,7 +107,7 @@ In selection sort, the first smallest element is selected from the unsorted arra
 
 > **Selection Sort Animation**
 
-![](animation/selection_sort.mp4)
+![](animation/selection_sort.gif)
 
 > **Selection Sort in java**
 
@@ -156,7 +156,7 @@ Insertion sort works similar to the sorting of playing cards in hands. It is ass
 
 > **Insertion Sort Animation**
 
-![](animation/insertion_sort.mp4)
+![](animation/insertion_sort.gif)
 
 > **Insertion Sort in java**
 
@@ -205,7 +205,7 @@ Picking a good pivot is necessary for the fast implementation of quicksort. Howe
 
 > **Quick Sort Animation**
 
-![](animation/quick_sort.mp4)
+![](animation/quick_sort.gif)
 
 > **Quick Sort in java**
 
