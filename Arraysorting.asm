@@ -1,4 +1,4 @@
-﻿.MODEL SMALL
+.MODEL SMALL
 .STACK 100H
 .DATA
 msg1  DW  'Enter size of array :$'
@@ -11,9 +11,10 @@ msg7  DW  'OR (enter 6 to reverse array):$'
 msg8  DW  'you can only choose 1 for bubble or 2 for Selection OR 3 OR 4 OR 5 OR 6 :$'
 msg9  DW  ,0AH,0DH,'your sorted array in ascending order is:$'
 msg10 DW  ,0AH,0DH,'your sorted array in descending order is:$'
-msg11 DW  ,0AH,0DH,'your Array has no elements,please enter POSITIVE integer:$'
+msg11 DW  ,0AH,0DH,'your Array has no elements,please enter POSITIVE integer from 0 to 255:$'
 msg12 DW  ,0AH,0DH,'your array is:$'
 msg13 DW  ,0AH,0DH,'your reversed array is: $'
+msg14 DW   ,0AH,0DH,'size of array can not be greater than 255.please enter POSITIVE integer from 0 to 255:$'
 ARRAY DW 255 DUP(?)  
 i     DW  ? 
 j     DW  ?
@@ -443,7 +444,7 @@ partition proc
                     inc  j              ;J = J + 1.
                     mov  ax, r
                     cmp  j,  ax         ;COMPARE J WITH R.
-                    jl   @for_j          ;IF J ≤ R-1 CONTINUE LOOP.
+                    jl   @for_j          ;IF J = R-1 CONTINUE LOOP.
 
             ;GET ARR[ i+1 ].
             inc  i
@@ -492,7 +493,7 @@ Get_Size PROC		; function to take array size from user (must be positive number 
    INT 21H                        ; read input
  
  CMP AL, "-"                    ; compare AL with "-"
- INC CL
+ ;INC CL
  JE Label_ERROR2                     ; jump to label Label_ERROR2 if AL="-"
  CMP AL, "+"                    ; compare AL with "+"
  JE Label_PLUS1                      ; jump to label Label_PLUS if AL="+"
@@ -551,11 +552,15 @@ JE Label_END_INPUT1               ; jump to label Label_END_INPUT
      AND AX, 000FH                ; convert ascii to decimal code
      PUSH AX                      ; push AX onto the STACK
      MOV AX, 10                   ; set AX=10
-     MUL BX                       ; set AX=AX*BX
+     MUL BX                        ; set AX=AX*BX
+     
      MOV BX, AX                   ; set BX=AX
      POP AX                       ; pop a value from STACK into AX
-     ADD BX, AX                   ; set BX=AX+BX
+     ADD BX, AX                   ; set BX=AX+BX        
      JS Label_ERROR1                   ; jump to label Label_ERROR if SF=1
+     CMP BX,255                           ;///////////////////////////////////////////////////////////////////////
+     JA Label_if_more_255                  ;////////////////////////////////////////
+     
    JMP Label_INPUT1                    ; jump to label Label_INPUT
 
  Label_ERROR1:                       ; jump label
@@ -567,8 +572,14 @@ JE Label_END_INPUT1               ; jump to label Label_END_INPUT
    LEA DX, msg3
    MOV AH, 9
    INT 21H
+   JMP Label_READ1                         
+ Label_if_more_255:                    ;////////////////////////////////////
+   ; pop ax                            ;'''''///////////////////////////
+    LEA DX, msg14
+   MOV AH, 9
+   INT 21H
    JMP Label_READ1
-
+ 
 Label_CLEAR1:                       ; jump label
      MOV DL, 8H                   ; set DL=8H   (backspace in ascii)
      INT 21H                      ; print a character
